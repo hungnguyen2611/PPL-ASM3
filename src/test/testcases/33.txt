@@ -1,0 +1,16 @@
+
+        Class A{
+            method(){
+                Return 1;
+            }
+            main(a,b:String; c:String){
+                Val obj: A = New A();
+                Self.method();
+            }
+        }
+        Class Program{
+            main(){
+
+            }
+        }
+        

@@ -1,0 +1,18 @@
+
+                    Class haha{
+                        Var cc: Int = 3;
+                        func(){
+                            Return 2;
+                        }
+                    }
+                    Class Program{
+                        Var a: Array[String, 2];
+                        main(){
+                            Var a: haha = New haha();
+                            Var c: Int = 0;
+                            Var in: String;
+                            c = a.func() * 2 - a.cc/3;
+                            in = a.func();
+                        }
+                    }
+                

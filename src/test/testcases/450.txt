@@ -1,0 +1,8 @@
+
+                    Class Program{
+                        Var a: Array[String, 2];
+                        main(){
+                            Val a:Int;
+                        }
+                    }
+                

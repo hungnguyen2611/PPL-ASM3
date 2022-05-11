@@ -1,0 +1,16 @@
+
+                    Class haha{
+                        Var cc: Int;
+                        func(){
+                            Return 2.5;
+                        }
+                        func2(a:Float){}
+                    }
+                    Class Program:haha{
+                        Var a: Array[Float, 2];
+                        Val b: haha;
+                        main(){
+                            b[0][1] = 2;
+                        }
+                    }
+                

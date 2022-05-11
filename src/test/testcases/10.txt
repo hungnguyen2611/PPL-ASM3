@@ -1,0 +1,27 @@
+
+        Class C{
+            Val c: Int = 56;
+        }
+        Class A:C{
+            Val a: Int = 5;
+            Var b: String;
+            method(){
+                Val a:String ="Hello";
+                Var b:A;
+                c = c + 1;
+                Val d: A = New C();
+            }
+            Var d: Int;
+        }
+        Class B:A{
+            Val a: Int;
+            method(a,b,c:A; d:Int; e:String){
+                Val f: A = New B();
+            }
+        }
+        Class Program{
+            main(){
+                Return ;
+            }
+        }
+        

@@ -1,0 +1,16 @@
+
+                    Class haha{
+                        Var cc: Float;
+                        func(){
+                            Return 1;
+                        }
+                    }
+                    Class Program:haha{
+                        Var a: Int;
+                        main(){
+                           Var b: Int;
+                           a = b;
+                           b = cc;
+                        }
+                    }
+                

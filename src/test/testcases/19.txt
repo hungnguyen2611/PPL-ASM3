@@ -1,0 +1,16 @@
+
+        Class A{
+            Val a:Int = 5;
+
+            getName(a,b:String; c:Int){
+                Val e:String ="Hello";
+                Val d:A = New X();
+
+            }
+        }
+        Class Program{
+            main(){
+
+            }
+        }
+        

@@ -1,0 +1,15 @@
+
+                    Class haha{
+                        Var cac: Int = 1000;
+                    }
+                    Class Program:haha{
+                        main1(){
+                            Val cac: Float = 3;
+                            Return cac;
+                        }
+                        main(){}
+                        Var a: Int = 5;
+                        Val b: Int = 6;
+                        Val cac: Int = 123;
+                    }
+                

@@ -1,0 +1,15 @@
+
+                    Class haha{
+                        Var cc: Int;
+                        func(){
+                            Return 2.5;
+                            Return 1;
+                        }
+                    }
+                    Class Program:haha{
+                        Var a: Array[Float, 2];
+                        main(){
+                            Var a: Array[Float, 3] = Array(1,2,3,5);
+                        }
+                    }
+                

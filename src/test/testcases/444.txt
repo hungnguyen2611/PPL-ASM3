@@ -1,0 +1,9 @@
+
+                    Class Program{
+                        Var a: Array[String, 2];
+                        main(){
+                            a[1][2][3] = ("str" +. "func") ==. "go";
+                            a[1] = True && False + 3;
+                        }
+                    }
+                

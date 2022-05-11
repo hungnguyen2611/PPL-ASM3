@@ -1,0 +1,14 @@
+
+                    Class haha{
+                        Var a:Int = 3;
+                        Constructor(a,b:Int; c:Float){}
+                    }
+                    Class Program{
+                        Var d,e,b:Int = 1,2,3;
+                        main(){
+                            d = Self.d + Self.e + Self.b;
+                            Var l:haha = New haha(1,2,1.1);
+                            Var lol:haha = New haha(1);
+                        }
+                    }
+                

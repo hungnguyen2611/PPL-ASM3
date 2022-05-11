@@ -1,0 +1,18 @@
+
+        Class A{
+            Var a:Int;
+            $a(){
+                Return;
+            }
+            getName(a,b:String; c:Int){
+                Var array:Array[Int,2] = Array(1,2);
+                Var e:Int = 5;
+                array[e] = A::$a();
+            }
+        }
+        Class Program{
+            main(){
+                Return;
+            }
+        }
+        

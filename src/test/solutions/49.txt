@@ -1,0 +1,1 @@
+Type Mismatch In Constant Declaration: ConstDecl(Id(a),StringType,ArrayCell(FieldAccess(Self(),Id(a)),[IntLit(0),IntLit(0)]))

@@ -1,0 +1,9 @@
+
+                    Class Program{
+                        main1(){}
+                        main2(){}
+                        main(){
+                            Return 1;
+                        }
+                    }
+                

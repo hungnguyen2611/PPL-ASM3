@@ -1,0 +1,14 @@
+
+                    Class haha{
+                        Var cc: Int;
+                        func(){
+                            Return 1;
+                        }
+                    }
+                    Class Program:haha{
+                        Val a: Int = 1;
+                        main(){
+                           a = cc;
+                        }
+                    }
+                

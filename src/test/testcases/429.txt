@@ -1,0 +1,13 @@
+
+                    Class haha{
+                        Var cc: Int;
+                        func(){
+                            Return 1;
+                        }
+                    }
+                    Class Program:haha{
+                        Var a: Array[Int, 2] = Array(1.5,2);
+                        main(){
+                        }
+                    }
+                

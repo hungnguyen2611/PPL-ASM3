@@ -1,0 +1,11 @@
+
+        Class A{
+            Var a:Int;
+            Val e:Int = 5;
+            Var b:Int = Self.a + 1;
+            Val c:Int = Self.e + b;
+        }
+        Class Program{
+            main(){}
+        }
+        

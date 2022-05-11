@@ -1,0 +1,14 @@
+
+                    Class Program{
+                        Var a:Int = 5;
+                        main(){}
+                        main1(x:Int; y:Float){
+                            Var a:Float;
+                            Var b:Int = a;
+                            Var c:Int = 1;
+                            Return a;
+                        }
+                        Constructor(){}
+                    }
+
+                

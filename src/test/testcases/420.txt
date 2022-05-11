@@ -1,0 +1,18 @@
+
+                    Class haha{
+                        Var cc: Int;
+                        func(){
+                            Return 1;
+                        }
+                    }
+                    Class Program:haha{
+                        Var a: Int = cc;
+                        main(){
+                           Val b: Int = 1;
+                           a = cc;
+                           Foreach (b In 1 .. 100 By 2){
+                                a = 5;
+                           }
+                        }
+                    }
+                

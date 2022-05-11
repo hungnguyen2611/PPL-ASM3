@@ -1,0 +1,20 @@
+
+                    Class hoho{
+                        Var dd: Int = 2;
+                    }
+                    Class haha{
+                        Var cc: Int = 3;
+                        Var $cc: hoho = New hoho();
+                        func(){
+                            Return 2;
+                        }
+                    }
+                    Class Program{
+                        Var a: Array[String, 2];
+                        main(){
+                            Var a: haha = New haha();
+                            Var f: Int = haha.$cc.dd;
+                            Var t: Int = a.$cc.dd;
+                        }
+                    }
+                

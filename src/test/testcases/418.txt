@@ -1,0 +1,21 @@
+
+                    Class haha{
+                        Var cc: Int;
+                        func(){
+                            Return 1;
+                        }
+                    }
+                    Class hoho{
+                        Val ll: haha = New haha();
+                    }
+                    Class Program:haha{
+                        Var a: Int = 5;
+                        Val b: Int = 6;
+                        Val cac: Int = 123;
+                        main1(){
+                            b = 5;
+                        }
+                        main(){}
+
+                    }
+                

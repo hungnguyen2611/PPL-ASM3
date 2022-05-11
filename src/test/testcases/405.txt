@@ -1,0 +1,8 @@
+
+                    Class Program{
+                        main1(a:Int; a:Float){
+                        }
+                        main(){}
+                    }
+
+                

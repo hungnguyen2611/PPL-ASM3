@@ -1,0 +1,19 @@
+
+                    Class Program2{
+                        Var c: Int = 5;
+                        Var b: Int = 5;
+                    }
+
+                    Class Program3{
+                        Var cac: Int = 5;
+                        main1(){
+                            Var a: Int = cac;
+                        }
+                    }
+
+                    Class Program{
+                        main(){}
+                        Var b: Int = 5;
+                        Var a: Int = 66;
+                    }
+                

@@ -1,0 +1,9 @@
+
+                    Class Program{
+                        main1(a:Int){
+                            Val a: Int;
+                        }
+                        main(){}
+                    }
+
+                

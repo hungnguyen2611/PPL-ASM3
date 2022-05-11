@@ -1,0 +1,12 @@
+
+                    Class haha{
+                        Var a:Int = 3;
+                    }
+                    Class Program{
+                        Var d,e,b:Int = 1,2,3;
+                        main(){
+                            d = Self.d + Self.e + Self.b;
+                            e = Self.a;
+                        }
+                    }
+                

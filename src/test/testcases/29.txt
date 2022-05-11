@@ -1,0 +1,10 @@
+
+        Class A{
+            Var a:Int;
+
+            getName(a,b:String; c:Int){
+                Var obj: Int = 5;
+                obj.a = 5;
+            }
+        }
+        

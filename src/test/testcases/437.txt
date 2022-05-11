@@ -1,0 +1,20 @@
+
+                    Class hoho{
+                        Var cl: Float;
+                    }
+                    Class haha{
+                        Var cc: hoho;
+                        func(){
+                            Return 2.5;
+                        }
+                        func2(a:Float){}
+                    }
+                    Class Program:haha{
+                        Var a: Array[Float, 2];
+                        Val b: haha;
+                        main(){
+                            Var a: Int = b.cc.cl;
+                            b.func2(1,2);
+                        }
+                    }
+                

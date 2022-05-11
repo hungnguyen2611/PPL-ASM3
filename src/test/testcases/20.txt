@@ -1,0 +1,24 @@
+
+        Class B{
+            Val c:String = "Hlo";
+            Var $e:String ="Hello";
+        }
+        Class A:B{
+            Val a:Int = 5;
+            Var a_ :String = "Hello";
+            getName(a,b:String; c:Int){
+                Val e:String ="Herllo";
+                a = "Hello";
+                c = Self.a;
+                b = (New B()).c;
+                b = (B::$e +. Self.a_) +. (New B()).c;
+                Val d:B = New A();
+
+            }
+        }
+        Class Program{
+            main(){
+
+            }
+        }
+        

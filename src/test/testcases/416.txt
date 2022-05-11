@@ -1,0 +1,25 @@
+
+                    Class haha{
+                        Var cc: Int = 1000;
+                        func(){
+                            Return 1;
+                        }
+                    }
+                    Class hoho{
+                        Val ll: haha = New haha();
+                    }
+                    Class Program:haha{
+                        main1(){
+                            Val c: haha = New haha();
+                            Var t: hoho = New hoho();
+                            Var l: Float = c::func();
+                            Var m: haha = t.ll;
+                            Var h: String = t::func();
+                            Return c;
+                        }
+                        main(){}
+                        Var a: Int = 5;
+                        Val b: Int = 6;
+                        Val cac: Int = 123;
+                    }
+                

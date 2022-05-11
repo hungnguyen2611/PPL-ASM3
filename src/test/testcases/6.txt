@@ -1,0 +1,31 @@
+
+        Class B{
+            Var att:String;
+            Constructor(){
+                Return;
+            }
+        }
+        Class A:B{
+            method(){
+                Val a:Array[Int,2] = Array(1,2);
+                Var b:Array[Array[Float,2],2] = Array(Array(1.0, 2.0), Array(3.5, 3.6));
+                Var c:Array[Array[Float,2],2] = Array(Array(1, 2), Array(3, 3));
+                Var obj_b:B = New B();
+                Var obj:B;
+            }
+        }
+        Class Program{
+            main(){
+                Var i :Int;
+                Foreach(i In 1 .. 100){
+                    Continue;
+                    Break;
+                }
+                Return;
+            }
+            Constructor(a,b,c:Int; d:String){
+                Return "Hello";
+                Continue;
+            }
+        }
+        

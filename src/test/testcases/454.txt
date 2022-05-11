@@ -1,0 +1,15 @@
+
+                    Class haha{
+                        Var b:Int;
+                        Val c:Int = 3;
+                    }
+                    Class Program{
+                        Var d:haha = New haha();
+                        Var b:Int = 2;
+                        Val a:Int = 1 + 2/3 -5*6 - d.c;
+                        Val aa:Int = 1 - 2/d.b;
+                        main(){
+
+                        }
+                    }
+                

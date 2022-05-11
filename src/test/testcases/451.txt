@@ -1,0 +1,9 @@
+
+                    Class Program{
+                        Var a: Array[String, 2];
+                        main(){
+                            Var b:Int = 2;
+                            Val a:Int = 1 + 2/3 -5*6 - b;
+                        }
+                    }
+                

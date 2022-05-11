@@ -1,0 +1,29 @@
+
+        Class A{
+            Val $atr: Int = 1;
+            Var $atrr: String = "Hello";
+            Val a:Float = 2;
+            Var b: Boolean = True;
+            $atr(){
+                Return 5;
+            }
+            a(){
+                Return 2.0;
+            }
+            method(){
+                Val A:A = New A();
+                Var cal: Int = 1;
+                Var f:Float = 5.6;
+                A::$atrr = "Hello wordl" +. A::$atrr;
+                A.b = False;
+                cal = A::$atr() + 5;
+                f = A.a() + 3.0;
+                Return cal;
+            }
+        }
+        Class Program{
+            main(){
+                Return;
+            }
+        }
+        

@@ -1,0 +1,8 @@
+
+                    Class Program{
+                        Var a: Array[Int, 2];
+                        main(){
+                            a[0][1] = 2.5;
+                        }
+                    }
+                

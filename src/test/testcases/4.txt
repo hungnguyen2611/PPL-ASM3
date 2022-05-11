@@ -1,0 +1,26 @@
+
+        Class A{
+            Var $static:Float = 1;
+            Val $obj:A = New A();
+            Val obj:A = New A();
+            Var a: Int = 5;
+            Var b: Int = 1 + A::$obj.a;
+            Var c: Int = 1 + Self.obj.a;
+            method(){
+                Val a: Int = 5;
+                Var b: Int = 1 + a;
+                Var A:A;
+                A = New A();
+                A.a = 1;
+                A::$static = 6;
+            }
+        }
+        Class Program{
+            main(){
+                Return;
+            }
+        }
+        Class B{
+
+        }
+        
