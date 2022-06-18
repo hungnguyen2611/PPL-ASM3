@@ -1,1 +1,1 @@
-Cannot Assign To Constant: AssignStmt(Id(a),StringLit(Hello))
+Type Mismatch In Constant Declaration: ConstDecl(Id(d),ClassType(Id(B)),NewExpr(Id(A),[]))

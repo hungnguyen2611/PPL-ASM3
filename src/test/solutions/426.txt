@@ -1,1 +1,1 @@
-Type Mismatch In Statement: AttributeDecl(Instance,VarDecl(Id(a),IntType,Id(cc)))
+Type Mismatch In Statement: VarDecl(Id(a),IntType,Id(cc))

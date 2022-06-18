@@ -1,1 +1,1 @@
-Type Mismatch In Constant Declaration: AttributeDecl(Instance,ConstDecl(Id(a),ArrayType(2,StringType),IntLit(3)))
+Type Mismatch In Constant Declaration: ConstDecl(Id(a),ArrayType(2,StringType),IntLit(3))

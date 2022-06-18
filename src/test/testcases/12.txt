@@ -4,7 +4,7 @@
             Var b:String = "Hello";
             getName(){
                 Val obj: A = New A();
-                obj.b = obj.a + 1; 
+                obj.b = obj.a + 1;
             }
         }
         Class Program{

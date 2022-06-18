@@ -1,1 +1,1 @@
-Type Mismatch In Constant Declaration: ConstDecl(Id(c),BoolType,BinaryOp(==.,StringLit(String),StringLit(Hello)))
+[]

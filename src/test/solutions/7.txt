@@ -1,1 +1,1 @@
-Type Mismatch In Statement: Call(Id(A),Id($method),[NewExpr(Id(A),[])])
+Type Mismatch In Statement: Call(NewExpr(Id(A),[]),Id(method),[NewExpr(Id(A),[])])

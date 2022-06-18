@@ -12,5 +12,6 @@
                         Var a: Int = 5;
                         Val b: Int = 6;
                         Val cac: Int = 123;
+                        Val b: Int = 3;
                     }
                 

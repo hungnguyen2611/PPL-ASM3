@@ -12,9 +12,9 @@
                         main1(){
                             Val c: haha = New haha();
                             Var t: hoho = New hoho();
-                            Var l: Float = c::func();
+                            Var l: Float = c.func();
                             Var m: haha = t.ll;
-                            Var h: String = t::func();
+                            Var h: String = t.func();
                             Return c;
                         }
                         main(){}

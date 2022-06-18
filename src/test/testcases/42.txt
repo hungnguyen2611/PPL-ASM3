@@ -1,6 +1,6 @@
 
                 Class Program{
-                    main() { 
+                    main() {
                         Return;
                     }
                 }

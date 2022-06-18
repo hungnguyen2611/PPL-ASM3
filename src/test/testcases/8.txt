@@ -23,7 +23,7 @@
                 c = c + 1;
                 Val obj:B = New B();
                 obj.b = obj.c + 1;
-                obj.d = c + 1; 
+                obj.d = c + 1;
             }
         }
 
@@ -35,7 +35,7 @@
                 c = c + 1;
                 Val obj:D = New D();
                 obj.b = obj.c + 1;
-                obj.d = c + 1; 
+                obj.d = c + 1;
 
                 Val obj2:A = New D();
                 obj2.b = obj2.c + 1;

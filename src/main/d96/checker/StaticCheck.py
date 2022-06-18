@@ -5,7 +5,18 @@
 from AST import * 
 from Visitor import *
 from StaticError import *
-from Utils import *
+
+class Utils:
+    def lookup(self,sym,lst,func):
+        for x in lst:
+            if sym.name == func(x):
+                if type(sym.mtype) is not type(x.mtype):
+                    if type(sym.mtype) is MType or type(x.mtype) is MType:
+                        continue
+                return x
+        return None
+
+
 
 class MType:
     def __init__(self,partype,rettype):
@@ -16,12 +27,13 @@ class MType:
 
 
 class Symbol:
-    def __init__(self,name,mtype,value = None, isVar = 0, isInst = False):
+    def __init__(self,name,mtype,value = None, isVar = 0, isInst = True, isDefault = False):
         self.name = name
         self.mtype = mtype
         self.value = value
         self.isVar = isVar
         self.isInst = isInst
+        self.isDefault = isDefault
 
     def __str__(self):
         return "Symbol: {}, {}, {} ".format(self.name, str(self.mtype), self.value)
@@ -36,50 +48,60 @@ class StaticChecker(BaseVisitor, Utils):
     ]
     glob = {}
     current_class = None
+    current_method = None
+    loop_lst = []
     def __init__(self,ast):
         self.ast = ast
 
-    def check_type(self, left, right, x, flag=False):
+    def check_type(self, left, right, x, flag=-1):
         if type(left) is not type(right):
             if type(left) is IntType:
-                raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
+                raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
             elif type(left) is StringType:
-                raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
+                raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
             elif type(left) is FloatType:
                 if type(right) is not IntType:
-                    raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
+                    raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
             elif type(left) is BoolType:
-                raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
+                raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
             elif type(left) is ArrayType:
-                raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
+                raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
             elif type(left) is ClassType:
                 if right is not None:
-                    raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
-        elif type(left) is ArrayType:
-            if left.size != right.size:
-                raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
-            else:
-                if type(left.eleType) is not type(right.eleType):
-                    if type(left.eleType) is IntType:
-                        raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
-                    elif type(left.eleType) is StringType:
-                        raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
-                    elif type(left.eleType) is FloatType:
-                        if type(right.eleType) is not IntType:
-                            raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
-                    elif type(left.eleType) is BoolType:
-                        raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
-                    elif type(left.eleType) is ArrayType:
-                        raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
-                    elif type(left.eleType) is ClassType:
-                        if right is not None:
-                            raise TypeMismatchInConstant(x) if flag else TypeMismatchInStatement(x)
+                    raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+        else:
+            if type(left) is ClassType and type(right) is ClassType:
+                if left.classname.name != right.classname.name:
+                    raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+            while type(left) is ArrayType:
+                if left.size != right.size:
+                    raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+                else:
+                    if type(left.eleType) is not type(right.eleType):
+                        if type(left.eleType) is IntType:
+                            raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+                        elif type(left.eleType) is StringType:
+                            raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+                        elif type(left.eleType) is FloatType:
+                            if type(right.eleType) is not IntType:
+                                raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+                        elif type(left.eleType) is BoolType:
+                            raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+                        elif type(left.eleType) is ArrayType:
+                            raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+                        elif type(left.eleType) is ClassType:
+                            if right is not None:
+                                raise TypeMismatchInConstant(x) if flag == 1 else TypeMismatchInStatement(x) if flag==-1 else TypeMismatchInExpression(x)
+                    left = left.eleType
+                    right = right.eleType
+
+
 
     def check(self):
         return self.visit(self.ast,StaticChecker.global_envi)
 
     def checkRedeclared(self, sym, kind, c):
-        if self.lookup(sym.name, c, lambda x: x.name):
+        if self.lookup(sym, c, lambda x: x.name):
             raise Redeclared(kind, sym.name)
         return sym
 
@@ -90,17 +112,22 @@ class StaticChecker(BaseVisitor, Utils):
         decl: List[ClassDecl]
         """
         self.glob = {}
-        c = c.copy()
+        self.current_class = None
+        self.current_method = None
+        self.loop_lst = []
+        cc = c.copy()
         haveEntry = False
         for x in ast.decl:
             self.current_class = x.classname.name
-            haveEntry = self.visitClassDecl(x, c)
+            if self.visitClassDecl(x, cc):
+                haveEntry = True
             if x.classname.name == "Program":
                 if not haveEntry:
                     raise NoEntryPoint()
 
         if not haveEntry:
             raise NoEntryPoint()
+
         return []
 
 
@@ -120,48 +147,47 @@ class StaticChecker(BaseVisitor, Utils):
             if ast.parentname.name not in self.glob.keys():
                 raise Undeclared(Class(), ast.parentname.name)
             inherit_envi = self.glob[ast.parentname.name]
-        local_envi.append(Symbol("Constructor", MType([], VoidType()), isInst=True))
-        local_envi.append(Symbol("Destructor", MType([], VoidType()), isInst=True))
+        local_envi.append(Symbol("Constructor", MType([], VoidType()), isInst=True, isDefault=True))
+        local_envi.append(Symbol("Destructor", MType([], VoidType()), isInst=True, isDefault=True))
+
         for x in ast.memlist:
+            self.glob[ast.classname.name] = local_envi
             if type(x) is MethodDecl:
+                self.current_method = x.name.name
                 if x.name.name == "main" and x.param == [] and ast.classname.name == "Program":
                     haveEntry = True
-                    self.visitMethodDecl(x, local_envi, True, inherit_envi.copy())
+                    self.visitMethodDecl(x, local_envi, inherit_envi.copy())
                 elif x.name.name == "Constructor":
                     idx = -1
                     for i in range(len(local_envi)):
-                        if local_envi[i].name == "Constructor":
+                        if local_envi[i].name == "Constructor" and local_envi[i].isDefault:
                             idx = i
                             break
                     if len(local_envi) != 0 and idx != -1:
                         local_envi.pop(idx)
-                    self.visitMethodDecl(x, local_envi, False, inherit_envi.copy())
+                    self.visitMethodDecl(x, local_envi, inherit_envi.copy())
                 elif x.name.name == "Destructor":
                     idx = -1
                     for i in range(len(local_envi)):
-                        if local_envi[i].name == "Destructor":
+                        if local_envi[i].name == "Destructor" and local_envi[i].isDefault:
                             idx = i
                             break
                     if len(local_envi) != 0 and idx != -1:
                         local_envi.pop(idx)
-                    self.visitMethodDecl(x, local_envi, False, inherit_envi.copy())
+                    self.visitMethodDecl(x, local_envi, inherit_envi.copy())
                 else:
-                    self.visitMethodDecl(x, local_envi, False, inherit_envi.copy())
+                    self.visitMethodDecl(x, local_envi, inherit_envi.copy())
             else:
                 self.visitAttributeDecl(x, local_envi, inherit_envi)
-            self.glob[ast.classname.name] = local_envi
+
 
         self.glob[ast.classname.name] = local_envi
         return haveEntry
 
-    def checkReturnStmt(self, lst):
-        for x in lst:
-            if type(x) is Return:
-                return True
-        return False
 
 
-    def visitMethodDecl(self,ast, c, isProgram, inherit_envi):
+
+    def visitMethodDecl(self,ast, c, inherit_envi):
         """
         class MethodDecl(MemDecl):
             kind: SIKind
@@ -169,16 +195,13 @@ class StaticChecker(BaseVisitor, Utils):
             param: List[VarDecl]
             body: Block
         """
-        flag = self.checkReturnStmt(ast.body.inst)
-        void = None
-        if not flag:
-            void = VoidType()
-        symbol = Symbol(ast.name.name, MType([i.varType for i in ast.param], void), isInst=True if isinstance(ast.kind, Instance) else False)
+        void = VoidType()
+        symbol = Symbol(ast.name.name, MType([i.varType for i in ast.param], void), isInst=True if isinstance(ast.kind, Instance) else False, isVar=0)
         kind = Method()
         c.append(self.checkRedeclared(symbol, kind, c))
         local_envi = []
         for i in ast.param:
-            local_envi.append(self.checkRedeclared(Symbol(i.variable.name, i.varType),Parameter(),local_envi))
+            local_envi.append(self.checkRedeclared(Symbol(i.variable.name, i.varType, isVar=1),Parameter(),local_envi))
             idx = -1
             for x in range(len(inherit_envi)):
                 if i.variable.name == inherit_envi[x].name:
@@ -186,25 +209,44 @@ class StaticChecker(BaseVisitor, Utils):
                     break
             if len(inherit_envi) != 0 and idx != -1:
                 inherit_envi.pop(idx)
+        lst = []
+        self.visitBlock(ast.body, lst, inherit_envi, param_envi=local_envi+[c[-1]])
 
-        for x in ast.body.inst:
+
+
+
+    def visitBlock(self, ast, c, inherit_envi, param_envi = []):
+        """
+        class Block(Stmt):
+            inst: List[Inst]
+        """
+
+        local_envi = param_envi
+
+        for x in ast.inst:
             if type(x) is Return:
-                if ast.name.name == "Constructor":
+                if self.current_method == "Constructor" and x.expr is not None:
                     raise TypeMismatchInStatement(x)
-                if ast.name.name == "main" and isProgram and x.expr is not None:
+                if self.current_method == "Destructor" and x.expr is not None:
                     raise TypeMismatchInStatement(x)
-                ret_val, ret_typ, _ = self.visit(x, local_envi)
-                for i in c:
-                    if i.name == ast.name.name:
-                        if i.mtype.rettype is None:
+                if self.current_method == "main" and self.current_class == "Program" and x.expr is not None:
+                    raise TypeMismatchInStatement(x)
+                ret_val, ret_typ, isVar = self.visit(x, local_envi + c + inherit_envi)
+                for i in c+param_envi:
+                    if i.name == self.current_method:
+                        if not isinstance(i.mtype, MType):
+                            continue
+                        if isinstance(i.mtype.rettype, VoidType):
                             i.mtype.rettype = ret_typ
                             i.value = ret_val
+                            i.isVar = isVar
                         else:
                             if type(i.mtype.rettype) is not type(ret_typ):
                                 raise TypeMismatchInStatement(x)
                         break
 
             elif type(x) is Assign:
+                rhs_val, rhs_typ, _ = self.visit(x.exp, local_envi + c + inherit_envi)
                 if type(x.lhs) is Id:
                     lst = local_envi + c + inherit_envi
                     flag = False
@@ -227,19 +269,27 @@ class StaticChecker(BaseVisitor, Utils):
                         raise CannotAssignToConstant(x)
                     if type(lhs_typ) is VoidType:
                         raise TypeMismatchInStatement(x)
-                    rhs_val, rhs_typ, _ = self.visit(x.exp, local_envi + c + inherit_envi)
                     self.check_type(lhs_typ, rhs_typ, x)
 
             elif type(x) is For:
-                self.visitFor(x, local_envi + c + inherit_envi)
+                self.visitFor(x, local_envi + c, inherit_envi.copy())
             elif type(x) is If:
-                self.visitIf(x, local_envi + c + inherit_envi)
+                self.visitIf(x, local_envi + c, inherit_envi.copy())
             elif type(x) is CallStmt:
                 self.visitCallStmt(x, local_envi + c + inherit_envi)
+            elif type(x) is Break:
+                if not self.loop_lst:
+                    raise MustInLoop(x)
+            elif type(x) is Continue:
+                if not self.loop_lst:
+                    raise MustInLoop(x)
             elif type(x) is VarDecl:
                 symbol = Symbol(x.variable.name, x.varType, isVar=1, isInst=True)
                 kind = Variable()
                 local_envi.append(self.checkRedeclared(symbol, kind, local_envi))
+                if isinstance(x.varType, ClassType):
+                    if x.varType.classname.name not in self.glob.keys():
+                        raise Undeclared(Class(), x.varType.classname.name)
                 value = None
                 if x.varInit:
                     value, typ, isVar = self.visit(x.varInit, local_envi + c + inherit_envi)
@@ -253,15 +303,19 @@ class StaticChecker(BaseVisitor, Utils):
                 if len(inherit_envi) != 0 and idx != -1:
                     inherit_envi.pop(idx)
             elif type(x) is ConstDecl:
+
                 symbol = Symbol(x.constant.name, x.constType, isVar=-1, isInst=True)
                 kind = Constant()
                 local_envi.append(self.checkRedeclared(symbol, kind, local_envi))
+                if isinstance(x.constType, ClassType):
+                    if x.constType.classname.name not in self.glob.keys():
+                        raise Undeclared(Class(), x.constType.classname.name)
                 value = None
                 if x.value:
                     value, typ, isVar = self.visit(x.value, local_envi + c + inherit_envi)
                     if isVar == 1:
                         raise IllegalConstantExpression(x.value)
-                    self.check_type(x.constType, typ, x, True)
+                    self.check_type(x.constType, typ, x, 1)
                 else:
                     raise IllegalConstantExpression(None)
                 local_envi[-1].value = value
@@ -272,8 +326,8 @@ class StaticChecker(BaseVisitor, Utils):
                         break
                 if len(inherit_envi) != 0 and idx != -1:
                     inherit_envi.pop(idx)
-
-
+            elif type(x) is Block:
+                self.visitBlock(x, local_envi + c, inherit_envi, param_envi=[])
 
 
     def visitReturn(self, ast, c):
@@ -307,10 +361,13 @@ class StaticChecker(BaseVisitor, Utils):
             symbol = Symbol(ast.decl.variable.name, ast.decl.varType, isVar=1, isInst=True if isinstance(ast.kind, Instance) else False)
             kind = Attribute()
             c.append(self.checkRedeclared(symbol, kind, c))
+            if isinstance(ast.decl.varType, ClassType):
+                if ast.decl.varType.classname.name not in self.glob.keys():
+                    raise Undeclared(Class(), ast.decl.varType.classname.name)
             value = None
             if ast.decl.varInit:
-                val, typ, isVar = self.visit(ast.decl.varInit, c + inherit_envi)
-                self.check_type(ast.decl.varType, typ, ast)
+                val, typ, isVar = self.visit(ast.decl.varInit, inherit_envi)
+                self.check_type(ast.decl.varType, typ, ast.decl)
                 c[-1].value = val
         else:
             idx = -1
@@ -323,12 +380,15 @@ class StaticChecker(BaseVisitor, Utils):
             symbol = Symbol(ast.decl.constant.name, ast.decl.constType, isVar=-1, isInst=True if isinstance(ast.kind, Instance) else False)
             kind = Attribute()
             c.append(self.checkRedeclared(symbol, kind, c))
+            if isinstance(ast.decl.constType, ClassType):
+                if ast.decl.constType.classname.name not in self.glob.keys():
+                    raise Undeclared(Class(), ast.decl.constType.classname.name)
             value = None
             if ast.decl.value:
-                val, typ, isVar = self.visit(ast.decl.value, c + inherit_envi)
+                val, typ, isVar = self.visit(ast.decl.value, inherit_envi)
                 if isVar == 1:
                     raise IllegalConstantExpression(ast.decl.value)
-                self.check_type(ast.decl.constType, typ, ast, True)
+                self.check_type(ast.decl.constType, typ, ast.decl, 1)
                 c[-1].value = val
             else:
                 raise IllegalConstantExpression(None)
@@ -353,10 +413,11 @@ class StaticChecker(BaseVisitor, Utils):
             if i.name == "Constructor":
                 cons_typ = i.mtype
                 break
-        if len(ast.param) != len(cons_typ.partype):
+        param_lst = [self.visit(i, c)[1] for i in ast.param]
+        if len(param_lst) != len(cons_typ.partype):
             raise TypeMismatchInExpression(ast)
-        for i in range(len(ast.param)):
-            self.check_type(ast.param[i], cons_typ.partype[i], ast)
+        for i in range(len(param_lst)):
+            self.check_type(param_lst[i], cons_typ.partype[i], ast, flag=0)
         return None, ClassType(ast.classname), 0
 
     def visitFieldAccess(self, ast, c):
@@ -376,7 +437,7 @@ class StaticChecker(BaseVisitor, Utils):
                     break
             if not flag:
                 if ast.obj.name not in self.glob.keys():
-                    raise Undeclared(Class(), ast.obj.name)
+                    raise Undeclared(Identifier(), ast.obj.name)
                 else:
                     local_envi = self.glob[ast.obj.name]
                     for i in local_envi:
@@ -384,18 +445,30 @@ class StaticChecker(BaseVisitor, Utils):
                             if i.isInst:
                                 raise IllegalMemberAccess(ast)
                             else:
+                                if type(i.mtype) is MType:
+                                    continue
                                 return i.value, i.mtype, i.isVar
                     raise Undeclared(Attribute(), ast.fieldname.name)
         else:
             val, typ, _ = self.visit(ast.obj, c)
+        local_envi = []
         if type(typ) is not ClassType:
-            raise TypeMismatchInExpression(ast)
-        local_envi = self.glob[typ.classname.name]
+            if isinstance(ast.obj, Id) and ast.obj.name in self.glob.keys():
+                local_envi = self.glob[ast.obj.name]
+            else:
+                raise TypeMismatchInExpression(ast)
+        else:
+            local_envi = self.glob[typ.classname.name]
+        dump = False
         for i in local_envi:
             if i.name == ast.fieldname.name:
-                if not i.isInst:
+                if not isinstance(typ, ClassType):
+                    dump = True
+                if not (i.isInst or dump) or (i.isInst and dump):
                     raise IllegalMemberAccess(ast)
                 else:
+                    if type(i.mtype) is MType:
+                        continue
                     return i.value, i.mtype, i.isVar
         raise Undeclared(Attribute(), ast.fieldname.name)
 
@@ -417,16 +490,16 @@ class StaticChecker(BaseVisitor, Utils):
                     break
             if not flag:
                 if ast.obj.name not in self.glob.keys():
-                    raise Undeclared(Class(), ast.obj.name)
+                    raise Undeclared(Identifier(), ast.obj.name)
                 else:
                     local_envi = self.glob[ast.obj.name]
-                    func_val = func_typ = None
+                    func_val = func_typ = isVar = None
                     flag = False
                     for i in local_envi:
                         if i.name == ast.method.name and type(i.mtype) is MType:
                             if i.isInst:
                                 raise IllegalMemberAccess(ast)
-                            func_val, func_typ = i.value, i.mtype
+                            func_val, func_typ, isVar = i.value, i.mtype, i.isVar
                             flag = True
                             break
                     if not flag:
@@ -440,20 +513,20 @@ class StaticChecker(BaseVisitor, Utils):
                     if len(partype_lst) != len(param_lst):
                         raise TypeMismatchInExpression(ast)
                     for i in range(len(param_lst)):
-                        self.check_type(partype_lst[i], param_lst[i], ast)
-                    return None, func_typ.rettype, 0
+                        self.check_type(partype_lst[i], param_lst[i], ast, flag=0)
+                    return None, func_typ.rettype, isVar
         else:
             val, typ, _ = self.visit(ast.obj, c)
         if type(typ) is not ClassType:
             raise TypeMismatchInExpression(ast)
         local_envi = self.glob[typ.classname.name]
-        func_val = func_typ = None
+        func_val = func_typ = isVar = None
         flag = False
         for i in local_envi:
             if i.name == ast.method.name and type(i.mtype) is MType:
                 if not i.isInst:
                     raise IllegalMemberAccess(ast)
-                func_val, func_typ = i.value, i.mtype
+                func_val, func_typ, isVar = i.value, i.mtype, i.isVar
                 flag = True
                 break
         if not flag:
@@ -466,14 +539,15 @@ class StaticChecker(BaseVisitor, Utils):
             raise TypeMismatchInExpression(ast)
         partype_lst = func_typ.partype
         param_lst = [self.visit(i, c)[1] for i in ast.param]
+
         if len(partype_lst) != len(param_lst):
             raise TypeMismatchInExpression(ast)
         for i in range(len(param_lst)):
-            self.check_type(partype_lst[i], param_lst[i], ast)
-        return None, func_typ.rettype, 0
+            self.check_type(partype_lst[i], param_lst[i], ast, flag=0)
+        return None, func_typ.rettype, isVar
 
 
-    def visitFor(self, ast, c):
+    def visitFor(self, ast, c, inherit_envi):
         """
         class For(Stmt):
             id: Id
@@ -482,17 +556,24 @@ class StaticChecker(BaseVisitor, Utils):
             loop: Stmt
             expr3: Expr = None
         """
+        self.loop_lst.append(ast)
         ret_val, _, _ = self.visit(ast.id, c)
         for i in c:
             if i.name == ast.id.name:
                 if i.isVar == -1:
-                    raise CannotAssignToConstant(ast)
+                    raise CannotAssignToConstant(Assign(ast.id, ast.expr1))
                 break
         exp1_val, exp1_typ, _ = self.visit(ast.expr1, c)
         exp2_val, exp2_typ, _ = self.visit(ast.expr2, c)
-        if type(exp1_typ) != IntType or type(exp2_typ) != IntType:
+        exp3_val, exp3_typ, _ = self.visit(ast.expr3, c)
+        if type(exp1_typ) is not IntType or type(exp2_typ) is not IntType or type(exp3_typ) is not IntType:
             raise TypeMismatchInStatement(ast)
-    def visitIf(self, ast, c):
+        if type(ast.loop) is Block:
+            self.visitBlock(ast.loop, c, inherit_envi, param_envi=[])
+        else:
+            self.visit(ast.loop, c)
+        self.loop_lst.pop()
+    def visitIf(self, ast, c, inherit_envi):
         """
         class If(Stmt):
             expr: Expr
@@ -502,6 +583,17 @@ class StaticChecker(BaseVisitor, Utils):
         _, ret_typ, _ = self.visit(ast.expr, c)
         if type(ret_typ) is not BoolType:
             raise TypeMismatchInStatement(ast)
+        if type(ast.thenStmt) is Block:
+            self.visitBlock(ast.thenStmt, c, inherit_envi, param_envi=[])
+        else:
+            self.visit(ast.thenStmt, c)
+        if ast.elseStmt:
+            if type(ast.elseStmt) is Block:
+                self.visitBlock(ast.elseStmt, c, inherit_envi, param_envi=[])
+            elif type(ast.elseStmt) is If:
+                self.visitIf(ast.elseStmt, c, inherit_envi.copy())
+            else:
+                self.visit(ast.elseStmt, c)
 
     def visitCallStmt(self, ast, c):
         """
@@ -512,6 +604,7 @@ class StaticChecker(BaseVisitor, Utils):
         """
         val = None
         typ = None
+
         if type(ast.obj) is Id:
             flag = False
             for i in c:
@@ -521,7 +614,7 @@ class StaticChecker(BaseVisitor, Utils):
                     break
             if not flag:
                 if ast.obj.name not in self.glob.keys():
-                    raise Undeclared(Class(), ast.obj.name)
+                    raise Undeclared(Identifier(), ast.obj.name)
                 else:
                     local_envi = self.glob[ast.obj.name]
                     func_val = func_typ = None
@@ -545,7 +638,8 @@ class StaticChecker(BaseVisitor, Utils):
                     if len(partype_lst) != len(param_lst):
                         raise TypeMismatchInStatement(ast)
                     for i in range(len(param_lst)):
-                        self.check_type(partype_lst[i], param_lst[i], ast)
+                        self.check_type(partype_lst[i], param_lst[i], ast, flag=0)
+                    return
         else:
             val, typ, isVar = self.visit(ast.obj, c)
         if type(typ) is not ClassType:
@@ -569,6 +663,7 @@ class StaticChecker(BaseVisitor, Utils):
             raise TypeMismatchInStatement(ast)
         partype_lst = func_typ.partype
         param_lst = [self.visit(i, c)[1] for i in ast.param]
+
         if len(partype_lst) != len(param_lst):
             raise TypeMismatchInStatement(ast)
         for i in range(len(param_lst)):
@@ -583,11 +678,18 @@ class StaticChecker(BaseVisitor, Utils):
         ret_val, ret_typ, isVar = self.visit(ast.arr, c)
         if type(ret_typ) is not ArrayType:
             raise TypeMismatchInExpression(ast)
+        idx_count = len(ast.idx) # a[1][2][3]
+        while type(ret_typ) is ArrayType and idx_count > 0:
+            ret_typ = ret_typ.eleType
+            idx_count -= 1
+        if idx_count > 0:
+            raise TypeMismatchInExpression(ast)
         for i in ast.idx:
             val, typ, _ = self.visit(i, c)
             if type(typ) is not IntType:
                 raise TypeMismatchInExpression(ast)
-        return None, ret_typ.eleType, isVar
+
+        return None, ret_typ, isVar
 
 
     def visitBinaryOp(self, ast, c):
@@ -600,20 +702,21 @@ class StaticChecker(BaseVisitor, Utils):
         op = ast.op
         left_val, left_type, isVar_left = self.visit(ast.left, c)
         right_val, right_type, isVar_right = self.visit(ast.right, c)
+
         if isVar_left == 1 or isVar_right == 1:
             isVar = 1
         else:
             isVar = 0
         if op in ['+', '-',  '*',  '/',  '<', '<=', '>', '>=']:
-            if type(left_type) is FloatType or type(right_type) is FloatType:
-                return None, FloatType(), isVar
+            if (type(left_type) is FloatType and type(right_type) is IntType) or (type(right_type) is FloatType and type(left_type) is IntType) or (type(right_type) is FloatType and type(left_type) is FloatType):
+                return None, FloatType() if op in ['+','-','*','/'] else BoolType(), isVar
             elif type(left_type) is IntType and type(right_type) is IntType:
-                return None, IntType(), isVar
+                return None, IntType() if op in ['+','-','*','/'] else BoolType(), isVar
             else:
                 raise TypeMismatchInExpression(ast)
         elif op in ['==', '!=']:
             if type(left_type) is IntType and type(right_type) is IntType:
-                return None, IntType(), isVar
+                return None, BoolType(), isVar
             elif type(left_type) is BoolType and type(right_type) is BoolType:
                 return None, BoolType(), isVar
             else:
@@ -628,7 +731,12 @@ class StaticChecker(BaseVisitor, Utils):
                 return None, BoolType(), isVar
             else:
                 raise TypeMismatchInExpression(ast)
-        elif op in ['+.', '==.']:
+        elif op == '==.':
+            if type(left_type) is StringType and type(right_type) is StringType:
+                return None, BoolType(), isVar
+            else:
+                raise TypeMismatchInExpression(ast)
+        elif op == '+.':
             if type(left_type) is StringType and type(right_type) is StringType:
                 return None, StringType(), isVar
             else:
@@ -679,13 +787,13 @@ class StaticChecker(BaseVisitor, Utils):
         val_lst = [self.visit(i, c)[0] for i in ast.value]
         typ_lst = [self.visit(i, c)[1] for i in ast.value]
         isVar_lst = [self.visit(i, c)[2] for i in ast.value]
-        isVar = 0
-        if 1 in isVar_lst:
-            isVar = 1
         for i in typ_lst:
             if type(i) is not type(typ_lst[0]):
                 raise IllegalArrayLiteral(ast)
-        return val_lst, ArrayType(len(val_lst), typ_lst[0]), isVar
+            elif type(i) is ArrayType and type(typ_lst[0]) is ArrayType:
+                if i.size != typ_lst[0].size:
+                    raise IllegalArrayLiteral(ast)
+        return val_lst, ArrayType(len(val_lst), typ_lst[0]), 0
 
     def visitNullLiteral(self, ast, c):
         return None, None, 0

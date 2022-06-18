@@ -16,16 +16,41 @@ class Emitter():
         typeIn = type(inType)
         if typeIn is IntType:
             return "I"
-        elif typeIn is cgen.StringType:
+        elif typeIn is FloatType:
+            return "F"
+        elif typeIn is BoolType:
+            return "Z"
+        elif typeIn is StringType:
             return "Ljava/lang/String;"
         elif typeIn is VoidType:
             return "V"
-        elif typeIn is cgen.ArrayPointerType:
+        elif typeIn is ArrayType:
             return "[" + self.getJVMType(inType.eleType)
-        elif typeIn is MType:
-            return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
-        elif typeIn is cgen.ClassType:
-            return "L" + inType.cname + ";"
+        elif typeIn is cgen.MType:
+            ret = ""
+            if type(inType.rettype) is IntType:
+                ret = "I"
+            elif type(inType.rettype) is FloatType:
+                ret = "F"
+            elif type(inType.rettype) is BoolType:
+                ret = "Z"
+            elif type(inType.rettype) is StringType:
+                ret = "Ljava/lang/String;"
+            elif type(inType.rettype) is VoidType:
+                ret = "V"
+            elif type(inType.rettype) is ArrayType:
+                ret = "[" + self.getJVMType(inType.eleType)
+            elif type(inType.rettype) is ClassType:
+                ret = "L" + inType.classname.name + ";"
+            r = (
+                    "("
+                    + "".join(list(map(lambda x: self.getJVMType(x), inType.partype)))
+                    + ")"
+                    + ret
+            )
+            return r
+        elif typeIn is ClassType:
+            return "L" + inType.classname.name + ";"
 
     def getFullType(inType):
         typeIn = type(inType)
@@ -40,7 +65,7 @@ class Emitter():
         #in: Int or Sring
         #frame: Frame
         
-        frame.push();
+        frame.push()
         if type(in_) is int:
             i = in_
             if i >= -1 and i <=5:
@@ -131,7 +156,6 @@ class Emitter():
         #fromLabel: Int
         #toLabel: Int
         #frame: Frame
-        
         return self.jvm.emitVAR(in_, varName, self.getJVMType(inType), fromLabel, toLabel)
 
     def emitREADVAR(self, name, inType, index, frame):
@@ -140,11 +164,19 @@ class Emitter():
         #index: Int
         #frame: Frame
         #... -> ..., value
-        
+
         frame.push()
         if type(inType) is IntType:
             return self.jvm.emitILOAD(index)
-        elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
+        elif type(inType) is FloatType:
+            return self.jvm.emitFLOAD(index)
+        elif type(inType) is BoolType:
+            return self.jvm.emitILOAD(index)
+        elif (
+                type(inType) is cgen.ArrayType
+                or type(inType) is cgen.ClassType
+                or type(inType) is StringType
+        ):
             return self.jvm.emitALOAD(index)
         else:
             raise IllegalOperandException(name)

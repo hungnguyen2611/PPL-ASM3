@@ -1,1 +1,1 @@
-Type Mismatch In Constant Declaration: AttributeDecl(Instance,ConstDecl(Id(b),IntType,ArrayCell(FieldAccess(Self(),Id(c)),[IntLit(0),IntLit(0)])))
+[]

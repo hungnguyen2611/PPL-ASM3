@@ -5,7 +5,7 @@
         Class A:B{
             Constructor(a: Array[Int,2]; b:String; c:B){
             }
-        }   
+        }
         Class Program{
             main(){
                 Val obj:A = New A(Array(1,2), "Hello", New B());

@@ -13,8 +13,8 @@
                         Var a: Array[String, 2];
                         main(){
                             Var a: haha = New haha();
-                            Var f: Int = haha.$cc.dd;
-                            Var t: Int = a.$cc.dd;
+                            Var f: Int = haha::$cc.dd;
+                            Var t: Int = a::$cc.dd;
                         }
                     }
                 

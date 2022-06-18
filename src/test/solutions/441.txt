@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinaryOp(+,StringLit(str),IntLit(4))
+Undeclared Identifier: a

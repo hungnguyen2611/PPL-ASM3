@@ -1,1 +1,1 @@
-Type Mismatch In Statement: Call(Id(b),Id(func2),[FloatLit(1.3)])
+Undeclared Identifier: b

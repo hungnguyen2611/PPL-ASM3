@@ -1,1 +1,1 @@
-Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a),[IntLit(0),IntLit(1)]),FloatLit(2.5))
+Illegal Constant Expression: BinaryOp(+,CallExpr(Self(),Id(foo2),[]),IntLit(1))

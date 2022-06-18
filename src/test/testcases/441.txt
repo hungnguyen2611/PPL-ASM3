@@ -2,8 +2,8 @@
                     Class Program{
                         Var a: Array[Float, 2];
                         main(){
-                            a[0][1] = (1+2)*3.5/3;
-                            a[1][2][3] = "str" + 4;
+                            a[0] = (1+2)*3.5/3;
+                            a[1] = "str" + 4;
                         }
                     }
                 

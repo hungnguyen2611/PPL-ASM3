@@ -9,7 +9,7 @@
                         Val a:Int = 1 + 2/3 -5*6 - d.c;
                         Val aa:Int = 1 - 2/d.b;
                         main(){
-                            
+
                         }
                     }
                 

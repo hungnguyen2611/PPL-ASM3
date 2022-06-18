@@ -1,1 +1,1 @@
-Type Mismatch In Expression: NewExpr(Id(haha),[IntLit(1)])
+Undeclared Identifier: d
